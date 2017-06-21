@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <title> Fedora 安装 Oracle · Hexo </title>
+    <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<link rel="stylesheet" href="/style/style.css">
+<script src="/script/jquery.min.js"></script>
+<script>
+    var CONFIG = {
+        title: "Hexo",
+        author: "John Doe",
+        lightbox: true,
+        animate: true
+    }
+</script>
+
+
+
+    <link rel="stylesheet" href="/lightbox/css/lightbox.min.css">
+
+
+
+
+    <link rel="stylesheet" href="/syuanpi/syuanpi.min.css">
+
+
+
+
+
+
+
+
+
+
+</head>
+<body>
+    <div class="progress">
+    <div class="progress-inner"></div>
+</div>
+    <div class="body">
+    <div class="tagcloud" id="tagcloud">
+    <div class="tagcloud-inner">
+        
+    </div>
+</div>
+    <header class="header" id="header">
+    <div class="title syuanpi tvIn">
+    <div class="table">
+        <div class="connect">
+            <div class="connect-inner">
+                <span><a href="/">Hexo</a></span>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <nav class="main-nav syuanpi tvIn">
+<div class="table">
+
+    <ul class="menu">
+        
+        <li class="menu-item">
+            <a href="javascript:;" id="search">
+                <span>Search</span>
+                
+                
+            </a>
+        </li>
+        
+        
+        
+            <li class="menu-item">
+                <a href="/">
+                    <span>Article</span>
+                    
+                    
+                </a>
+            </li>
+        
+        
+        
+            <li class="menu-item">
+                <a href="/archives">
+                    <span>Archives</span>
+                    
+                    
+                </a>
+            </li>
+        
+        
+        
+            <li class="menu-item">
+                <a href="javascript:;" id="tags">
+                    <span>Tags</span>
+                    
+                    
+                </a>
+            </li>
+        
+        
+        
+            <li class="menu-item">
+                <a href="/about">
+                    <span>About</span>
+                    
+                    
+                </a>
+            </li>
+        
+        
+    </ul>
+
+</div>
+</nav>
+<div class="mobile-nav"></div>
+</header>
+    <div class="container">
+        <main class="main" id="main">
+            
+    
+    <article class="post">
+        <header class="post-header">
+            <div class="post-time syuanpi riseIn-light back-1">
+                <span>Jun 21, 2017</span>
+            </div>
+            <h1 class="post-title syuanpi riseIn-light back-2">
+            
+                Fedora 安装 Oracle
+            
+            </h1>
+            
+                
+            
+        </header>
+        <div class="post-content syuanpi riseIn-light back-3">
+            
+                <p>Fedora 25 下安装 Oracle 11gR2</p>
+<a id="more"></a>
+<h3 id="文档说明"><a href="#文档说明" class="headerlink" title="文档说明"></a>文档说明</h3><p>系统:Fedora 25 Workstation x86_64<br>数据库:Oracle 11.2.0.4<br>硬件环境:Intel Core I7 6700K/16G/2T</p>
+<p>配置文件中需添加的内容以—作为起止分割线,需修改的内容以===作为起止分割线<br>脚本执行前请将”你的IP”,”服务器IP”替换为实际的值</p>
+<h3 id="安装操作系统"><a href="#安装操作系统" class="headerlink" title="安装操作系统"></a>安装操作系统</h3><ul>
+<li>安装语言选英文</li>
+<li>硬盘手动分区,swap空间不能低于16G </li>
+<li>安装结束并执行以下命令,后面的操作可由ssh远程完成</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">systemctl stop firewalld</div><div class="line">systemctl disable firewalld</div><div class="line">systemctl enable sshd.service</div><div class="line">systemctl start sshd.service</div></pre></td></tr></table></figure>
+<h3 id="数据库安装前的准备"><a href="#数据库安装前的准备" class="headerlink" title="数据库安装前的准备"></a>数据库安装前的准备</h3><p><code>vi /etc/hosts</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">服务器IP   dwsoft  dwsoft</div></pre></td></tr></table></figure></p>
+<p><code>vi /etc/hostname</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">dwsoft</div></pre></td></tr></table></figure>
+<p><code>vi /etc/sysctl.conf</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">fs.aio-max-nr = 1048576</div><div class="line">fs.file-max = 6815744</div><div class="line">kernel.shmall = 2097152</div><div class="line">kernel.shmmax = 4294967295</div><div class="line">kernel.shmmni = 4096</div><div class="line"># semaphores: semmsl, semmns, semopm, semmni</div><div class="line">kernel.sem = 250 32000 100 128</div><div class="line">net.ipv4.ip_local_port_range = 9000 65500</div><div class="line">net.core.rmem_default=262144</div><div class="line">net.core.rmem_max=4194304</div><div class="line">net.core.wmem_default=262144</div><div class="line">net.core.wmem_max=1048586</div></pre></td></tr></table></figure></p>
+<p><code>/sbin/sysctl -p</code><br><code>vi /etc/security/limits.conf</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">oracle              soft    nproc   2047</div><div class="line">oracle              hard    nproc   16384</div><div class="line">oracle              soft    nofile  4096</div><div class="line">oracle              hard    nofile  65536</div><div class="line">oracle              soft    stack   10240</div></pre></td></tr></table></figure></p>
+<p><code>vi /etc/pam.d/login</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">session    required     pam_limits.so</div></pre></td></tr></table></figure></p>
+<p><code>vi /etc/selinux/config</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SELINUX=permissive</div></pre></td></tr></table></figure></p>
+<p><code>reboot</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line">dnf groupinstall &quot;Development Tools&quot; -y</div><div class="line">dnf groupinstall &quot;Administration Tools&quot; -y</div><div class="line">dnf groupinstall &quot;System Tools&quot; -y</div><div class="line"></div><div class="line"></div><div class="line">dnf install binutils -y</div><div class="line">dnf install compat-libstdc++-33 -y</div><div class="line">dnf install compat-libstdc++-33.i686 -y</div><div class="line">dnf install elfutils-libelf -y</div><div class="line">dnf install elfutils-libelf-devel -y</div><div class="line">dnf install gcc -y</div><div class="line">dnf install gcc-c++ -y</div><div class="line">dnf install glibc -y</div><div class="line">dnf install glibc.i686 -y</div><div class="line">dnf install glibc-common -y</div><div class="line">dnf install glibc-devel -y</div><div class="line">dnf install glibc-headers -y</div><div class="line">dnf install glibc-devel.i686 -y</div><div class="line">dnf install ksh -y</div><div class="line">dnf install libaio -y</div><div class="line">dnf install libaio.i686 -y</div><div class="line">dnf install libaio-devel -y</div><div class="line">dnf install libaio-devel.i686 -y</div><div class="line">dnf install libgcc -y</div><div class="line">dnf install libgcc.i686 -y</div><div class="line">dnf install libstdc++ -y</div><div class="line">dnf install libstdc++.i686 -y</div><div class="line">dnf install libstdc++-devel -y</div><div class="line">dnf install make -y</div><div class="line">dnf install numactl -y</div><div class="line">dnf install numactl-devel -y</div><div class="line">dnf install sysstat -y</div><div class="line">dnf install unixODBC -y</div><div class="line">dnf install unixODBC.i686 -y</div><div class="line">dnf install unixODBC-devel -y</div><div class="line">dnf install unixODBC-devel.i686 -y</div><div class="line">dnf install elfutils-libelf-devel -y</div><div class="line"></div><div class="line"></div><div class="line">groupadd oinstall</div><div class="line">groupadd dba</div><div class="line">groupadd oper</div><div class="line">groupadd asmadmin</div><div class="line"></div><div class="line">useradd -g oinstall -G dba,oper,asmadmin oracle</div><div class="line">passwd oracle</div><div class="line"></div><div class="line"></div><div class="line">mkdir -p /u01/app/oracle/product/11.2.0/dbhome_1</div><div class="line">chown -R oracle:oinstall /u01</div><div class="line">chmod -R 775 /u01</div></pre></td></tr></table></figure>
+<p><code>vi /etc/redhat-release</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">redhat release 6</div></pre></td></tr></table></figure></p>
+<p><code>su - oracle</code><br><code>vi /home/oracle/.bash_profile</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"># Oracle Settings</div><div class="line">TMP=/tmp; export TMP</div><div class="line">TMPDIR=$TMP; export TMPDIR</div><div class="line"></div><div class="line">ORACLE_HOSTNAME=dwsoft; export ORACLE_HOSTNAME</div><div class="line">ORACLE_UNQNAME=orcl; export ORACLE_UNQNAME</div><div class="line">ORACLE_BASE=/u01/app/oracle; export ORACLE_BASE</div><div class="line">ORACLE_HOME=$ORACLE_BASE/product/11.2.0/dbhome_1; export ORACLE_HOME</div><div class="line">ORACLE_SID=orcl; export ORACLE_SID</div><div class="line">ORACLE_TERM=xterm; export ORACLE_TERM</div><div class="line">PATH=/usr/sbin:$PATH; export PATH</div><div class="line">PATH=$ORACLE_HOME/bin:$PATH; export PATH</div><div class="line"></div><div class="line">LD_LIBRARY_PATH=$ORACLE_HOME/lib:/lib:/usr/lib; export LD_LIBRARY_PATH</div><div class="line">CLASSPATH=$ORACLE_HOME/JRE:$ORACLE_HOME/jlib:$ORACLE_HOME/rdbms/jlib; export CLASSPATH</div></pre></td></tr></table></figure></p>
+<p><code>source /home/oracle/.bash_profile</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">unzip -q p13390677_112040_Linux-x86-64_1of7.zip</div><div class="line">unzip -q p13390677_112040_Linux-x86-64_2of7.zip</div><div class="line">unzip -q p13390677_112040_Linux-x86-64_3of7.zip</div><div class="line">unzip -q p13390677_112040_Linux-x86-64_4of7.zip</div><div class="line">unzip -q p13390677_112040_Linux-x86-64_5of7.zip</div><div class="line">unzip -q p13390677_112040_Linux-x86-64_6of7.zip</div><div class="line">unzip -q p13390677_112040_Linux-x86-64_7of7.zip</div></pre></td></tr></table></figure>
+<p><code>DISPLAY=你的IP:0.0; export DISPLAY</code><br><code>xhost +你的IP</code></p>
+<p><code>DISPLAY=192.168.1.104:0.0; export DISPLAY;xhost +192.168.1.104</code></p>
+<p><code>$./database/runInstaller</code></p>
+<ul>
+<li>安装到”Link binaries”时如果遇到错误(提示makefile …. ins_emagent.mk),执行下面的脚本</li>
+</ul>
+<p><code>$sed -i &#39;s/^\(\s*\$(MK_EMAGENT_NMECTL)\)\s*$/\1 -lnnz11/g&#39; $ORACLE_HOME/sysman/lib/ins_emagent.mk</code></p>
+<p>###安装结束后的工作###</p>
+<p><code>vi /etc/redhat-release</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Fedora release 25 (Twenty Five)</div></pre></td></tr></table></figure>
+<ul>
+<li>至此Oracle的安装工作完成</li>
+</ul>
+<h3 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h3><ul>
+<li>启动Oracle</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$sqlplus / as sysdba</div><div class="line">SQL&gt; startup</div><div class="line">SQL&gt; (Ctrl+D)</div><div class="line"></div><div class="line">$lsnrctl start </div><div class="line">$emctl start dbconsole</div></pre></td></tr></table></figure>
+<ul>
+<li>查看service_name</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$sqlplus / as sysdba</div><div class="line"></div><div class="line">SQL&gt; select value from v$parameter where name=&apos;service_names&apos;;</div></pre></td></tr></table></figure>
+<ul>
+<li>测试数据库连接</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlplus SYSTEM/密码@服务器IP:1521/orcl</div></pre></td></tr></table></figure>
+<ul>
+<li>查询数据库字符集</li>
+</ul>
+<p>select userenv(‘language’) from dual;</p>
+<ul>
+<li><p>中文乱码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ vi ~/.bash_profile</div><div class="line"></div><div class="line">export LANG=en</div></pre></td></tr></table></figure>
+</li>
+<li><p>挂载U盘,复制压缩包,先用 fdisk -l 确认U盘的设备名,例如/dev/sdb1</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">#mkdir /mnt/usb</div><div class="line">#mount /dev/sdb1 /mnt/usb</div><div class="line"></div><div class="line">$cd ~</div><div class="line">$cp /mnt/usb/*.zip .</div></pre></td></tr></table></figure>
+</li>
+<li><p>系统安装镜像下载地址</p>
+</li>
+</ul>
+<p><code>https://download.fedoraproject.org/pub/fedora/linux/releases/25/Workstation/x86_64/iso/Fedora-Workstation-Live-x86_64-25-1.3.iso</code></p>
+<ul>
+<li>U盘安装制作工具</li>
+</ul>
+<p><code>https://rufus.akeo.ie/downloads/rufus-2.11.exe</code></p>
+<ul>
+<li>安装文件校验码 新下载的系统镜像和安装包请做SHA校验确认完整性后使用</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">Fedora-Workstation-Live-x86_64-25-1.3.iso </div><div class="line">SHA-256=818017f42a2741cfaf20e94aecf6a63d1b995abfdaff5917df7218d0d89976a7</div><div class="line"></div><div class="line">p13390677_112040_Linux-x86-64_7of7.zip </div><div class="line">SHA-1=B23A8CED6D47664F20C116ABA9A2C77D65B2DD6D</div><div class="line">MD5=CE5D4820B5CF01E70ECFB2078078EBEF</div><div class="line"></div><div class="line">p13390677_112040_Linux-x86-64_6of7.zip </div><div class="line">SHA-1=79533E2FF40664A4640616BD559903ED616F2633</div><div class="line">MD5=2DB69CD15DB335758228D91182263C5E</div><div class="line"></div><div class="line">p13390677_112040_Linux-x86-64_5of7.zip </div><div class="line">SHA-1=8D68764AB38804A9B9C9E80BF5AE0F3D6C397151</div><div class="line">MD5=A5B610B8B8B839DFF36102E2BB658DDD</div><div class="line"></div><div class="line">p13390677_112040_Linux-x86-64_4of7.zip </div><div class="line">SHA-1 1ACF8F785313D3C5CF631A0077416C22348B9DF8</div><div class="line">MD5=18B988B1450DDBA102D557DFF80D7ABE</div><div class="line"></div><div class="line">p13390677_112040_Linux-x86-64_3of7.zip </div><div class="line">SHA-1 8C0CD2D7BB2DD73E965A90CD053828D7A52AE7E7</div><div class="line">MD5=04CEF37991DB18F8190F7D4A19B26912</div><div class="line"></div><div class="line">p13390677_112040_Linux-x86-64_2of7.zip </div><div class="line">SHA-1 2E628D8CAC5D1C6FFF15E728B1F227747BF2DED8</div><div class="line">MD5=67BA1E68A4F581B305885114768443D3</div><div class="line"></div><div class="line">p13390677_112040_Linux-x86-64_1of7.zip </div><div class="line">SHA-1 983461D6442B0833630475EC4885278588585651</div><div class="line">MD5=1616F61789891A56EAFD40DE79F58F28</div></pre></td></tr></table></figure>
+<ul>
+<li>默认启动至命令行模式</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">systemctl set-default multi-user.target </div><div class="line">systemctl isolate multi-user.target </div><div class="line">systemctl isolate graphical.target</div></pre></td></tr></table></figure>
+<ul>
+<li>本地PL/SQL Developer连接远程ORACLE</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">DWSOFT =</div><div class="line">  (DESCRIPTION =</div><div class="line">    (ADDRESS = (PROTOCOL = TCP)(HOST = 服务器IP)(PORT = 1521))</div><div class="line">    (CONNECT_DATA =</div><div class="line">      (SERVER = DEDICATED)</div><div class="line">      (SERVICE_NAME = orcl)</div><div class="line">    )</div><div class="line">  )</div></pre></td></tr></table></figure>
+            
+        
+        </div>
+        
+            
+            
+        
+    </article>
+    
+        
+    <nav class="article-page">
+        
+        
+            <a href="/2017/06/21/hello-world/" id="art-right" class="art-left">
+                <span class="prev-title"> 
+                    <i class="iconfont icon-left"></i>Hello World
+                </span>
+            </a>
+        
+    </nav>
+
+        
+    
+
+
+        </main>
+        <footer class="footer syuanpi fadeIn" id="footer">
+    <hr>
+    <div class="footer-wrapper">
+        <div class="left">
+            <div class="contact-icon">
+    
+    
+    
+    
+    
+    
+    
+    
+</div>
+        </div>
+        <div class="right">
+            <div class="copyright">
+    <div class="info">
+        <span>&copy;</span>
+        <span>1970 ~ 2017</span>
+        <span>❤</span>
+        <span>John Doe</span>
+    </div>
+    <div class="theme">
+        <span>
+            Powered by
+            <a href="http://hexo.io/" target="_blank">Hexo </a>
+        </span>
+        <span>
+            Theme
+            <a href="https://github.com/ColMugX/hexo-theme-Nlvi"> Nlvi </a>
+        </span>
+    </div>
+    
+</div>
+        </div>
+    </div>
+</footer>
+    </div>
+    <script src="/script/nlvi.js"></script>
+<script src="/script/search.js"></script>
+
+    <script src="/lightbox/js/lightbox.min.js"></script>
+
+<script>
+$(document).ready(function(){
+    document.body.addEventListener('touchstart', function () {});
+    $('.progress').hide();
+    $('.body').show();
+    Nlvi.tagcloud();
+    Nlvi.back2top();
+    Nlvi.showToc();
+    Nlvi.showComments();
+    Nlvi.showReward();
+
+    !CONFIG.animate && Nlvi.offAnimate();
+    CONFIG.lightbox && Nlvi.onPicBox();
+})
+</script>
+    </div>
+    
+        
+    
+    <div class="backtop syuanpi dead toTop" id="backtop">
+    <i class="iconfont icon-up"></i>
+    <span style="text-align:center;font-family:Georgia;"><span style="font-family:Georgia;" id="scrollpercent">1</span>%</span>
+</div>
+    
+    <div class="search" id="search">
+        <div class="mask" id="mask"></div>
+        <div class="search-wrapper syuanpi">
+            <h1 id="search-header" class="syuanpi">搜索一下？</h1>
+            <div class="input">
+                <input type="text" id="local-search-input" results="0" name="">
+            </div>
+            <div id="local-search-result"></div>
+        </div>
+    </div>
+    <script>
+    var GREETING = {
+        morning: "当我们探索时，就要发现到真理",
+        noon: "人的天职在于勇于探索真理。",
+        after: "一件事实是一条没有性别的真理",
+        night: "真理有时可能变得黯淡，但它永远不会熄灭",
+        midnight: "真理在人那里获得生命力，并且展现出来"
+    }
+    $(document).ready(function(){
+        Nlvi.search();
+    });
+    </script>
+
+</body>
+</html>
