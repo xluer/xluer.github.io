@@ -1,11 +1,7 @@
 <!DOCTYPE html>
 <html lang="">
 <head>
-    <title>
-  
-    Archives · Hexo
-  
-</title>
+    <title> Fedora下为Tomcat编译安装APR · Hexo </title>
     <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
@@ -126,63 +122,71 @@
         <main class="main" id="main">
             
     
-    <div class="archive syuanpi riseIn-light" id="archive">
-        
-            <h1 class="archive-title">Total</h1>
-            <span class="archive-num">3 Posts In Total</span>
-        
-        <div class="archive-list">
-            <ul>
-        
+    <article class="post">
+        <header class="post-header">
+            <div class="post-time syuanpi riseIn-light back-1">
+                <span>Jul 12, 2017</span>
+            </div>
+            <h1 class="post-title syuanpi riseIn-light back-2">
+            
+                Fedora下为Tomcat编译安装APR
+            
+            </h1>
             
                 
-                
-                
+                    <div class="post-tags syuanpi riseIn-light back-3">
                     
-                     
-                        <h2 class="archive-year"> 2017 </h2>
+                        <a href="/tags/fedora/">fedora</a>
                     
+                        <a href="/tags/tomcat/">tomcat</a>
+                    
+                        <a href="/tags/apr/">apr</a>
+                    
+                    </div>
                 
             
+        </header>
+        <div class="post-content syuanpi riseIn-light back-3">
             
-            <li class="archive-post">
-                <span class="archive-post-time">
-                
-                    06-21
-                
-                </span>
-                <span class="archive-post-link">
-                    <a href="/2017/06/21/fedora_oracle_install/">Fedora 25 下安装 Oracle 11gR2</a>
-                </span>
-            </li>
+                <h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>解压位于tomcat/bin目录下的apr源码</p>
+<pre><code>tar xzf tomcat-native.tar.gz
+</code></pre><p>下载编译安装所需的依赖</p>
+<pre><code>dnf install apr-devel openssl-devel
+</code></pre><p>Ubuntu和CentOS下的命令</p>
+<pre><code>apt-get install libapr1.0-dev libssl-dev
+yum install apr-devel openssl-devel
+</code></pre><h2 id="配置编译参数"><a href="#配置编译参数" class="headerlink" title="配置编译参数"></a>配置编译参数</h2><p>在tomcat-native/native目录下执行</p>
+<pre><code>./configure --with-apr=/usr/bin/apr-1-config \
+        --with-java-home=$JDK_HOME \
+        --with-ssl=yes \
+        --prefix=$CATALINA_HOME    
+</code></pre><p>执行成功后<code>make &amp;&amp; make install</code></p>
+<p>编译后的文件会放到$CATALINA_HOME/lib下</p>
+<p>如果Tomcat启动时还是找不到APR的话，在bin/setenv.sh中添加<code>JAVA_OPTS=&quot;-Djava.library.path=&quot;$CATALINA_HOME&quot;/lib&quot;</code></p>
 
+            
         
-            
-                
-                
-                
-            
-            
-            <li class="archive-post">
-                <span class="archive-post-time">
-                
-                    06-20
-                
-                </span>
-                <span class="archive-post-link">
-                    <a href="/2017/06/20/hexo-note/">hexo 备忘</a>
-                </span>
-            </li>
-
-        
-            </ul>
         </div>
-    </div>
+        
+            
+            
+        
+    </article>
     
-    <nav class="pagination">
-        <span class="page-number current">1</span>
+        
+    <nav class="article-page">
+        
+        
+            <a href="/2017/06/21/fedora_oracle_install/" id="art-right" class="art-left">
+                <span class="prev-title"> 
+                    <i class="iconfont icon-left"></i>Fedora 25 下安装 Oracle 11gR2
+                </span>
+            </a>
+        
     </nav>
 
+        
+    
 
 
         </main>
@@ -246,6 +250,8 @@ $(document).ready(function(){
 })
 </script>
     </div>
+    
+        
     
     <div class="backtop syuanpi dead toTop" id="backtop">
     <i class="iconfont icon-up"></i>
