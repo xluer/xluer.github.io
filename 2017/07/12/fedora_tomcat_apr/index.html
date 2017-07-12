@@ -155,18 +155,16 @@
 <pre><code>tar xzf tomcat-native.tar.gz
 </code></pre><p>下载编译安装所需的依赖</p>
 <pre><code>dnf install apr-devel openssl-devel
-</code></pre><p>Ubuntu和CentOS下的命令</p>
+</code></pre><p>Ubuntu</p>
 <pre><code>apt-get install libapr1.0-dev libssl-dev
-yum install apr-devel openssl-devel
+</code></pre><p>CentOS</p>
+<pre><code>yum install apr-devel openssl-devel
 </code></pre><h2 id="配置编译参数"><a href="#配置编译参数" class="headerlink" title="配置编译参数"></a>配置编译参数</h2><p>在tomcat-native/native目录下执行</p>
-<pre><code>./configure --with-apr=/usr/bin/apr-1-config \
-        --with-java-home=$JDK_HOME \
-        --with-ssl=yes \
-        --prefix=$CATALINA_HOME    
-</code></pre><p>执行成功后<code>make &amp;&amp; make install</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">./configure --with-apr=/usr/bin/apr-1-config \</div><div class="line">        --with-java-home=$JDK_HOME \</div><div class="line">        --with-ssl=yes \</div><div class="line">        --prefix=$CATALINA_HOME</div></pre></td></tr></table></figure>
+<p>执行成功后<code>make &amp;&amp; make install</code></p>
 <p>编译后的文件会放到$CATALINA_HOME/lib下</p>
-<p>如果Tomcat启动时还是找不到APR的话，在bin/setenv.sh中添加<code>JAVA_OPTS=&quot;-Djava.library.path=&quot;$CATALINA_HOME&quot;/lib&quot;</code></p>
-
+<p>如果Tomcat启动时还是找不到APR的话，在bin/setenv.sh中添加</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">JAVA_OPTS=&quot;-Djava.library.path=&quot;$CATALINA_HOME&quot;/lib&quot;</div></pre></td></tr></table></figure>
             
         
         </div>
